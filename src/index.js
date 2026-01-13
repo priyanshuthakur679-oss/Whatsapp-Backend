@@ -17,11 +17,13 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin:
-     "https://whatsapp-frontend-navy.vercel.app",
+    origin: ["https://whatsapp-frontend-navy.vercel.app"],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
 
 // Routes
 app.get("/", (req, res) => {
