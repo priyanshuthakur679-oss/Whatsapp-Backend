@@ -15,14 +15,29 @@ const PORT = process.env.PORT || 5000;
 // Middlewares
 app.use(express.json());
 app.use(cookieParser());
+const allowedOrigins = [
+  "https://whatsapp-frontend-navy.vercel.app",
+];
+
 app.use(
   cors({
-    origin: ["https://whatsapp-frontend-navy.vercel.app"],
+    origin: function (origin, callback) {
+      // allow requests with no origin (like mobile apps, curl)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// Preflight
+app.options("*", cors());
+
 
 
 // Routes
