@@ -5,12 +5,18 @@ import express from "express";
 const app = express();
 const server = http.createServer(app);
 
+// Get allowed origins from environment
+const allowedOrigins = (process.env.ALLOWED_ORIGINS?.split(',') || [
+  "https://whatsapp-frontend-navy.vercel.app",
+]).map(origin => origin.trim());
+
 const io = new Server(server, {
-  path: "/socket.io",       // ✅ must match frontend + nginx
+  path: "/socket.io",
   cors: {
-    origin: true,           // ✅ reflect request origin
+    origin: allowedOrigins,
     credentials: true,
-    methods: ["GET", "POST"]
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"]
   },
   transports: ["websocket", "polling"],
   pingTimeout: 20000,
