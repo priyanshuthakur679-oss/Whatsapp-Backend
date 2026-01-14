@@ -38,11 +38,12 @@ export const signup = async (req, res) => {
       password: hashedPassword,
     });
 
-    // 🔑 set cookie
-    generateToken(newUser._id, res);
+    // 🔑 Generate token
+    const token = generateToken(newUser._id, res);
 
     return res.status(201).json({
       success: true,
+      token,
       user: {
         _id: newUser._id,
         fullName: newUser.fullName,
@@ -87,10 +88,11 @@ export const login = async (req, res) => {
       });
     }
 
-    generateToken(user._id, res);
+    const token = generateToken(user._id, res);
 
     return res.status(200).json({
       success: true,
+      token,
       user: {
         _id: user._id,
         fullName: user.fullName,
@@ -113,8 +115,9 @@ export const logout = (req, res) => {
     res.cookie("jwt", "", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "None",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
       maxAge: 0,
+      path: "/",
     });
 
     return res.status(200).json({

@@ -3,7 +3,16 @@ import User from "../models/user.model.js";
 
 export const protectRoute = async (req, res, next) => {
   try {
-    const token = req.cookies?.jwt;
+    // Try to get token from cookies first
+    let token = req.cookies?.jwt;
+
+    // If not in cookies, try Authorization header
+    if (!token && req.headers.authorization) {
+      const authHeader = req.headers.authorization;
+      if (authHeader.startsWith("Bearer ")) {
+        token = authHeader.slice(7); // Remove "Bearer " prefix
+      }
+    }
 
     // 1️⃣ Token check
     if (!token) {
