@@ -17,6 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 const allowedOrigins = (process.env.ALLOWED_ORIGINS?.split(',') || [
   "https://whatsapp-frontend-navy.vercel.app",
+  "http://localhost:5173",
 ]).map(origin => origin.trim());
 
 const corsOptions = {
